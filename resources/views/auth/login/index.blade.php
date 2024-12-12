@@ -4,7 +4,7 @@
     <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg">
         <h2 class="mb-6 text-3xl font-bold text-center text-green-500">Masuk</h2>
 
-        <form action="" method="POST" class="space-y-4" enctype="multipart/form-data">
+        <form action="{{ route('login.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
             @csrf
 
             <!-- Email -->

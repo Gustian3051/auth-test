@@ -1,10 +1,10 @@
-<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+<nav class="fixed top-0 z-50 w-full shadow bg-gray-50 dark:text-white dark:bg-gray-900">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
-            <div class="flex items-center justify-start rtl:justify-end">
+            <div class="flex items-center justify-start gap-2 rtl:justify-end">
                 <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
                     type="button"
-                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600">
                     <span class="sr-only">Open sidebar</span>
                     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +13,7 @@
                         </path>
                     </svg>
                 </button>
-                <a class="flex ms-2 md:me-24">
+                <a class="flex flex-col items-center">
                     <img src="{{ asset('image/logo/silk.png') }}" class="hidden w-24 md:block"
                         alt="{{ asset('image/logo/silk.png') }}" />
                     <img src="{{ asset('image/logo/polindra.png') }}" class="w-10 md:hidden"
@@ -22,45 +22,39 @@
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
-                    <div>
-                        <button type="button"
-                            class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                            aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                            <span class="sr-only">Open user menu</span>
-                            <img class="w-8 h-8 rounded-full" src="{{ asset('image/icon_profile.png') }}"
-                                alt="user photo">
-                        </button>
+                    <div class="flex items-center gap-4">
+                        <div class="hidden md:block">
+                            <div class="flex-col text-right md:flex">
+                                <p class="text-sm">
+                                    {{ Auth::user()->nama }}
+                                </p>
+
+                                <p class="text-xs">
+                                    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Staff'))
+                                        {{ implode(', ', Auth::user()->getRoleNames()->toArray()) }}
+                                    @else
+                                        No Role Assigned
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:focus:ring-gray-600"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="{{ asset('image/icon_profile.png') }}"
+                                    alt="user photo">
+                            </button>
+                        </div>
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                         id="dropdown-user">
-                        <div class="px-4 py-3" role="none">
-                            <p class="text-sm text-gray-900 dark:text-white" role="none">
-                                Neil Sims
-                            </p>
-                            <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                neil.sims@flowbite.com
-                            </p>
-                        </div>
                         <ul class="py-1" role="none">
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">Settings</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">Earnings</a>
-                            </li>
-                            <li>
-                                <a href=""
+                                <a href="{{ route('logout') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">Keluar<i class="ms-1 fa-solid fa-right-from-bracket"></i></a>
+                                    role="menuitem">Keluar <i class="fa-solid fa-right-from-bracket"></i></a>
                             </li>
                         </ul>
                     </div>

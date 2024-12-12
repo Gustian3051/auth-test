@@ -29,26 +29,38 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
+        $credentials = $request->validate([
+            'identifier' => 'required',
             'password' => 'required',
         ]);
 
+        // Login Admin/Staff
+        if (Auth::guard('admin-staff')->attempt(['username' => $credentials['identifier'], 'password' => $request->password])) {
+            $user = Auth::guard('admin-staff')->user();
 
+            if ($user->hasRole('Admin')) {
+                return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Admin');
+            }
 
-        if (Auth::guard('admindanstaff')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            $user = Auth::guard('admindanstaff')->user();
-
-            // Mengecek role
-            if ($user && $user->hasRole('Admin')) {
-                return redirect()->route('dashboard.index');
-            } elseif ($user && $user->hasRole('Staff')) {
-                return redirect()->route('dashboard.index');
+            if ($user->hasRole('Staff')) {
+                return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Staff');
             }
         }
 
-        return back()->withErrors(['username' => 'Username atau password salah']);
+        // Login Dosen
+        if (Auth::guard('dosen')->attempt(['username' => $credentials['identifier'], 'password' => $request->password])) {
+            return redirect()->route('beranda.index')->with('success', 'Login berhasil sebagai Dosen');
+        }
+
+        // Login Mahasiswa
+        if (Auth::guard('mahasiswa')->attempt(['nim' => $credentials['identifier'], 'password' => $request->password])) {
+            return redirect()->route('beranda.index');
+        }
+
+        // Jika semua gagal
+        return back()->withErrors(['error' => 'Username atau password salah'])->withInput();
     }
+
 
     /**
      * Display the specified resource.

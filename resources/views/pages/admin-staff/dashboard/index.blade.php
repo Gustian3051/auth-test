@@ -3,7 +3,7 @@
 @section('content')
 @include('partials.navbar.admin-staff-navbar')
 
-<div class="p-4 mt-3 sm:ml-64">
+<div class="p-5 mt-1 sm:ml-64">
     <div class="space-y-4 rounded-lg mt-14">
         <div class="p-4 bg-white rounded-lg shadow-lg">
             <p class="text-lg font-semibold text-green-500">Dashboard</p>

@@ -3,63 +3,73 @@
 namespace App\Http\Controllers\WEB\AdminStaff;
 
 use App\Http\Controllers\Controller;
+use App\Models\DokumenSPO;
 use Illuminate\Http\Request;
 
-class DokumenSPOController extends Controller
+class DokumenSpoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = DokumenSpo::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where('nama_dokumen', 'LIKE', "%{$search}%");
+        }
+
+        $dataDokumenSPO = $query->paginate(5)->appends($request->all());
+
+        return view('pages.admin-staff.admin.dokumen-spo.index', ['dataDokumenSPO' => $dataDokumenSPO]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_dokumen' => 'required|string|max:255',
+            'file_dokumen' => 'required|mimes:pdf,doc,docx|max:2048',
+        ]);
+
+        $file_path = $request->file('file_dokumen')->storeAs(
+            'dokumen-spo',
+            time() . '_' . $request->file('file_dokumen')->getClientOriginalName()
+        );
+
+        // Pastikan path file berhasil disimpan
+        if (!$file_path) {
+            return redirect()->back()->with('error', 'Gagal menyimpan file!');
+        }
+
+        DokumenSpo::create([
+            'nama_dokumen' => $request->nama_dokumen,
+            'file_dokumen' => $file_path,
+        ]);
+
+        return redirect()->route('dokumen-spo.index')->with('success', 'Dokumen SPO berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(DokumenSpo $data_spo)
     {
-        //
+        // Hapus file terkait
+        if ($data_spo->file_dokumen && file_exists(storage_path('app/' . $data_spo->file_dokumen))) {
+            unlink(storage_path('app/' . $data_spo->file_dokumen));
+        }
+
+        // Hapus data
+        $data_spo->delete();
+
+        return redirect()->back()->with('success', 'Dokumen SPO berhasil dihapus!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function downloadSPO(DokumenSpo $data_spo)
     {
-        //
-    }
+        $filePath = $data_spo->file_dokumen;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        if (file_exists(storage_path('app/' . $filePath))) {
+            return response()->download(storage_path('app/' . $filePath));
+        } else {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
     }
 }
