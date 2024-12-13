@@ -9,9 +9,14 @@ class RuangLaboratorium extends Model
 {
     use HasFactory;
 
-    protected $table = 'ruang_laboratoria';
+    protected $table = 'ruang_laboratorium';
 
     protected $fillable = [
         'nama',
     ];
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'ruang_laboratorium_id');
+    }
 }

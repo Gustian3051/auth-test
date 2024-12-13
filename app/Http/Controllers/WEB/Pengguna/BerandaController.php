@@ -38,7 +38,7 @@ class BerandaController extends Controller
                 ->get();
 
             // Hitung jumlah total item di keranjang
-            $notifikasiKeranjang = $dataKeranjang->sum('jumlah');
+            $notifikasiKeranjang = $dataKeranjang->sum('alat_bahan_id');
         }
 
         return view('pages.pengguna.beranda.index', [

@@ -11,22 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('alat_bahan')) {
             Schema::create('peminjaman', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('peminjam_id'); // ID pengguna
-                $table->string('peminjam_type'); // Tipe pengguna
-                $table->foreignId('alat_bahan_id')->constrained()->onDelete('cascade');
-                $table->integer('jumlah'); // Jumlah item yang dipinjam
+                $table->unsignedBigInteger('user_id'); // ID pengguna
+                $table->string('user_type'); // Polymorphic relationship
+                $table->unsignedBigInteger('matkul_id');
+                $table->unsignedBigInteger('dosen_id');
+                $table->unsignedBigInteger('ruang_laboratorium_id');
                 $table->dateTime('tanggal_waktu_peminjaman');
                 $table->time('waktu_pengembalian')->nullable();
-                $table->enum('status', ['Diproses', 'Ditolak', 'Diterima'])->default('Diproses');
-                $table->string('tindakan_SPO')->nullable();
+                $table->enum('status', ['Menunggu', 'Diproses', 'Diterima', 'Ditolak'])->default('Menunggu');
+                $table->unsignedBigInteger('dokumen_spo_id')->nullable();
+                $table->string('anggota_kelompok')->nullable();
                 $table->timestamps();
+
+                $table->foreign('matkul_id')->references('id')->on('matkuls')->onDelete('cascade');
+                $table->foreign('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
+                $table->foreign('ruang_laboratorium_id')->references('id')->on('ruang_laboratorium')->onDelete('cascade');
+                $table->foreign('dokumen_spo_id')->references('id')->on('dokumen_s_p_o_s')->onDelete('cascade');
+                $table->index(['user_id', 'user_type']);
             });
-
-        }
-
     }
 
     /**
@@ -34,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjamen');
+        Schema::dropIfExists('peminjaman');
     }
 };

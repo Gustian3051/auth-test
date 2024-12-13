@@ -60,7 +60,7 @@
                         real-time untuk menghindari tumpang tindih pemesanan.</p>
 
                     {{-- Form Filter --}}
-                    <form method="GET" action="{{ route('barang.index') }}"
+                    <form method="GET" action="{{ route('beranda.index') }}"
                         class="flex items-center justify-center gap-2 mb-4">
                         {{-- Tombol Semua Kategori --}}
                         <button type="submit" name="kategori" value="semua"
@@ -83,7 +83,7 @@
                     @else
                         <div id="card-section" class="grid grid-cols-1 gap-2 md:grid-cols-4 animate-card">
                             @foreach ($dataBarang as $data)
-                                <a href="#" class="w-full p-3 border border-green-500 rounded-lg shadow-lg max-w-m">
+                                <a href="{{ route('katalog.show', ['katalog' => $data->id]) }}" class="w-full p-3 border border-green-500 rounded-lg shadow-lg max-w-m">
                                     <div class="flex justify-center w-full">
                                         <img src="{{ asset('image/barang.png') }}" class="object-cover zoom-image"
                                             alt="{{ $data->nama }}" />

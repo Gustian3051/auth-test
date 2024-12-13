@@ -12,38 +12,45 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
 
     protected $fillable = [
-        'peminjam_id',
-        'peminjam_type',
-        'alat_bahan_id',
+        'user_id',
+        'user_type',
+        'matkul_id',
+        'dosen_id',
+        'ruang_laboratorium_id',
         'tanggal_waktu_peminjaman',
         'waktu_pengembalian',
         'status',
-        'tindakan_SPO',
+        'dokumen_spo_id',
+        'anggota_kelompok',
     ];
 
-    public function peminjam()
+    public function user()
     {
         return $this->morphTo();
     }
 
-    public function alat_bahan()
+    public function peminjamanDetail()
     {
-        return $this->belongsTo(AlatBahan::class);
+        return $this->hasMany(PeminjamanDetail::class, 'peminjaman_id');
     }
 
-    public function mahasiswa()
+    public function matkul()
     {
-        return $this->belongsTo(Mahasiswa::class);
+        return $this->belongsTo(Matkul::class, 'matkul_id');
     }
 
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class);
+        return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 
-    public function stok()
+    public function ruangLaboratorium()
     {
-        return $this->belongsTo(Stok::class, 'stok_id');
+        return $this->belongsTo(RuangLaboratorium::class, 'ruang_laboratorium_id');
     }
 
+    public function dokumenSpo()
+    {
+        return $this->belongsTo(DokumenSpo::class, 'dokumen_spo_id');
+    }
 }

@@ -21,15 +21,15 @@ class Dosen extends Authenticatable
         'jenis_kelamin',
     ];
 
-    public function peminjam()
-    {
-        return $this->morphMany(peminjaman::class, 'peminjam_id');
-    }
 
-    public function keranjang()
+
+    public function keranjangs()
     {
         return $this->morphMany(Keranjang::class, 'user');
     }
 
-
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'dosen_id');
+    }
 }

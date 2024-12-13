@@ -18,9 +18,9 @@ class AlatBahan extends Model
         'foto',
     ];
 
-    public function peminjaman()
+    public function keranjangs()
     {
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasMany(Keranjang::class, 'alat_bahan_id');
     }
 
     public function kategori()

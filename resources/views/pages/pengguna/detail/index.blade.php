@@ -50,8 +50,9 @@
                         </div>
                     </div>
                     <div>
-                        <form action="{{ route('detail.store', ['barang' => $data->id]) }}" method="POST">
+                        <form action="{{ route('katalog.store') }}" method="POST">
                             @csrf
+                            <input type="text" name="alat_bahan_id" id="alat_bahan_id" value="{{ $data->id }}" hidden>
                             <div class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-medium">Jumlah Pinjam</p>
@@ -62,7 +63,7 @@
                                         <i class="fa-solid fa-minus"></i>
                                     </button>
                                     <!-- Input Kuantitas -->
-                                    <input type="number" name="stock_pinjam" id="stock_pinjam"
+                                    <input type="number" name="jumlah" id="jumlah"
                                         class="w-15 auto text-center font-bold " value="1" min="1"
                                         max="{{ $data->stok->stok }}" readonly>
                                     <!-- Tombol Plus -->
@@ -72,10 +73,10 @@
                                 </div>
                             </div>
                             <div class="mt-4">
-                                <label for="tindakan_spo"
+                                <label for="tindakan_SPO"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tindakan
                                     SPO</label>
-                                <textarea id="tindakan_spo" rows="4" name="tindakan_spo"
+                                <textarea id="tindakan_SPO" rows="4" name="tindakan_SPO"
                                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="Tulis tindakan SPO"></textarea>
                             </div>
@@ -97,7 +98,7 @@
     <script>
         // Fungsi untuk menambah jumlah_pinjam
         function increment() {
-            let input = document.getElementById('stock_pinjam');
+            let input = document.getElementById('jumlah');
             let currentValue = parseInt(input.value);
             let maxValue = parseInt(input.getAttribute('max'));
 
@@ -108,7 +109,7 @@
 
         // Fungsi untuk mengurangi jumlah_pinjam
         function decrement() {
-            let input = document.getElementById('stock_pinjam');
+            let input = document.getElementById('jumlah');
             let currentValue = parseInt(input.value);
             let minValue = parseInt(input.getAttribute('min'));
 

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\WEB\Pengguna;
 
 use App\Http\Controllers\Controller;
 use App\Models\AlatBahan;
+use App\Models\Dosen;
 use App\Models\Keranjang;
+use App\Models\Matkul;
+use App\Models\RuangLaboratorium;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +18,27 @@ class KeranjangController extends Controller
      */
     public function index()
     {
-        //
+        $userID = auth()->id();
+        $userType = auth()->user()->getMorphClass();
+
+        $dosen = Dosen::all();
+        $matkul = Matkul::all();
+        $ruangLaboratorium = RuangLaboratorium::all();
+
+        $dataKeranjang = Keranjang::with('alatBahan')->where('user_id', $userID)->get();
+
+        $barangKosong = $dataKeranjang->isEmpty();
+
+
+
+        return view('pages.pengguna.keranjang.index', [
+            'dataKeranjang' => $dataKeranjang,
+            'barangKosong' => $barangKosong,
+            'notifikasiKeranjang' => $dataKeranjang->sum('alat_bahan_id'),
+            'dosen' => $dosen,
+            'matkul' => $matkul,
+            'ruangLaboratorium' => $ruangLaboratorium,
+        ]);
     }
 
     /**
@@ -29,26 +52,35 @@ class KeranjangController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $alatBahanId)
+    public function store(Request $request)
     {
-        $dataUser = Auth::user();
+        $request->validate(
+            [
+                'alat_bahan_id' => 'required|exists:alat_bahans,id',
+                'jumlah' => 'required|int|min:1',
+            ]
+        );
 
-        $request->validate([
-            'jumlah' => 'required|integer|min:1',
-            'tindakan_SPO' => 'required'
-        ]);
+        $userID = auth()->id();
+        $userType = auth()->user()->getMorphClass();
 
-        $dataAlatBahan = AlatBahan::findOrFail($alatBahanId);
+        $dataKeranjang = Keranjang::where('user_id', $userID)
+            ->where('alat_bahan_id', $request->alat_bahan_id)
+            ->first();
 
-        Keranjang::create([
-            'user_id' => $dataUser->id,
-            'user_type' => get_class($dataUser),
-            'alat_bahan_id' => $alatBahanId,
-            'jumlah' => $request->jumlah,
-            'tindakan_SPO' => $request->tindakan_SPO
-        ]);
-
-        return redirect()->back()->with('success', 'Data Keranjang berhasil ditambahkan');
+        if ($dataKeranjang) {
+            $dataKeranjang->update([
+                'jumlah' => $dataKeranjang->jumlah + $request->jumlah,
+            ]);
+        } else {
+            Keranjang::create([
+                'user_id' => $userID,
+                'user_type' => $userType,
+                'alat_bahan_id' => $request->alat_bahan_id,
+                'jumlah' => $request->jumlah,
+            ]);
+        }
+        return redirect()->route('beranda.index')->with('success', 'Barang berhasil ditambahkan ke keranjang');
     }
 
     /**
@@ -56,13 +88,7 @@ class KeranjangController extends Controller
      */
     public function show()
     {
-        $dataUser = Auth::user();
-        $dataKeranjang = Keranjang::where('user_id', $dataUser->id)
-                                    ->where('user_yype', get_class($dataUser))
-                                    ->with('alat_bahan_id')
-                                    ->get();
-
-        return view('pengguna.keranjang.index', compact('dataKeranjang'));
+        //
     }
 
     /**
@@ -86,6 +112,13 @@ class KeranjangController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $dataKeranjang = Keranjang::findOrFail($id);
+
+        if ($dataKeranjang->user_id !== auth()->id()) {
+            return back()->with('error', 'Keranjang tidak ditemukan');
+        }
+
+        $dataKeranjang->delete();
+        return back()->with('success', 'Keranjang berhasil dihapus');
     }
 }

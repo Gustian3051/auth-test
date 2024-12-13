@@ -22,12 +22,8 @@ class Mahasiswa extends Authenticatable
         'foto'
     ];
 
-    public function peminjaman()
-    {
-        return $this->morphMany(Peminjaman::class, 'peminjam_id');
-    }
 
-    public function keranjang()
+    public function keranjangs()
     {
         return $this->morphMany(Keranjang::class, 'user');
     }

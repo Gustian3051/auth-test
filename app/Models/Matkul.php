@@ -15,4 +15,8 @@ class Matkul extends Model
         'kode_matkul',
         'nama_matkul',
     ];
+
+    public function peminjaman() {
+        return $this->hasMany(Peminjaman::class, 'matkul_id');
+    }
 }

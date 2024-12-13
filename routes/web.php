@@ -20,6 +20,7 @@ use App\Http\Controllers\WEB\Pengguna\BerandaController;
 use App\Http\Controllers\WEB\Pengguna\DetailController;
 use App\Http\Controllers\WEB\Pengguna\KatalogController;
 use App\Http\Controllers\WEB\Pengguna\KeranjangController;
+use App\Http\Controllers\WEB\Pengguna\PeminjamanController;
 use App\Models\Matkul;
 use Illuminate\Support\Facades\Route;
 
@@ -80,7 +81,6 @@ Route::middleware('MultiAuth:mahasiswa')->group(function () {
     Route::resource('beranda', BerandaController::class);
     Route::resource('katalog', KatalogController::class);
     Route::resource('detail', DetailController::class);
-
-    Route::post('keranjang/{alatBahan}', [KeranjangController::class, 'store'])->name('keranjang.store');
-    Route::get('keranjang', [KeranjangController::class, 'show'])->name('keranjang.show');
+    Route::resource('keranjang', KeranjangController::class);
+    Route::resource('peminjaman', PeminjamanController::class);
 });

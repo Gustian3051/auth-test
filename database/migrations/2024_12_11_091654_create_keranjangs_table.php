@@ -16,9 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('user_type'); // Untuk menentukan jenis pengguna (dosen, mahasiswa)
             $table->foreignId('alat_bahan_id')->constrained('alat_bahans')->onDelete('cascade');
-            $table->integer('jumlah');
+            $table->integer('jumlah')->unsigned()->default(1);
             $table->string('tindakan_SPO')->nullable();
             $table->timestamps();
+
+            $table->index(['user_id', 'user_type']);
         });
     }
 

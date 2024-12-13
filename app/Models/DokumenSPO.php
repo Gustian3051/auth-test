@@ -18,4 +18,9 @@ class DokumenSPO extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'dokumen_spo_id');
+    }
 }

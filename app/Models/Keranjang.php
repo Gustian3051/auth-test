@@ -12,7 +12,8 @@ class Keranjang extends Model
     protected $table = 'keranjangs';
     protected $fillable = ['user_id', 'user_type', 'alat_bahan_id', 'jumlah', 'tindakan_SPO'];
 
-    public function alat_bahan()
+
+    public function alatBahan()
     {
         return $this->belongsTo(AlatBahan::class, 'alat_bahan_id');
     }
@@ -21,5 +22,4 @@ class Keranjang extends Model
     {
         return $this->morphTo();
     }
-
 }
