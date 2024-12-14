@@ -35,8 +35,8 @@
         <tbody>
             @if ($peminjaman->isEmpty())
                 <tr>
-                    <td colspan="9" class="px-6 py-3 text-center text-gray-500 border">
-                        Tidak ada data peminjaman
+                    <td colspan="8" class="px-6 py-3 text-center text-gray-500 border">
+                        Tidak ada peminjaman
                     </td>
                 </tr>
             @else
@@ -82,10 +82,9 @@
                         </td>
                     </tr>
 
-                    @include('partials.modals.detail.modal-verifikasi-peminjaman', [
+                    @include('partials.modals.detail.modal-informasi-peminjaman', [
                         'peminjaman' => $peminjaman,
                     ])
-
                 @endforeach
             @endif
 

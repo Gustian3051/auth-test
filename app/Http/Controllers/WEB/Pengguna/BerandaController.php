@@ -29,8 +29,12 @@ class BerandaController extends Controller
         $barangKosong = $dataBarang->isEmpty();
 
         // Data keranjang untuk pengguna yang sedang login
-        $notifikasiKeranjang = [];
-        $dataKeranjang = [];
+        $notifikasiKeranjang = [
+            'alat_bahan_id' => 0
+        ];
+        $dataKeranjang = [
+            'alat_bahan_id' => 0
+        ];
 
         if (auth()->check()) {
             $dataKeranjang = Keranjang::where('user_id', auth()->id())

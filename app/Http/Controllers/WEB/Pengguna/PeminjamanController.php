@@ -8,6 +8,7 @@ use App\Models\Dosen;
 use App\Models\Keranjang;
 use App\Models\Matkul;
 use App\Models\Peminjaman;
+use App\Models\PeminjamanDetail;
 use App\Models\RuangLaboratorium;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -62,8 +63,8 @@ class PeminjamanController extends Controller
                 'dokumen_spo_id' => 'required|exists:dokumen_s_p_o_s,id',
                 'matkul_id' => 'required|exists:matkuls,id',
                 'dosen_id' => 'required|exists:dosens,id',
-                'ruangan_id' => 'required|exists:ruang_laboratorium,id',
-                'anggota_kelompok' => 'required',
+                'ruang_laboratorium_id' => 'required|exists:ruang_laboratorium,id',
+                'anggota_kelompok' => 'nullable|string',
             ],
             [
                 'tanggal_waktu_peminjaman.required' => 'Tanggal waktu peminjaman harus diisi',
@@ -76,8 +77,8 @@ class PeminjamanController extends Controller
                 'matkul_id.exists' => 'Matkul tidak ditemukan',
                 'dosen_id.required' => 'Dosen harus diisi',
                 'dosen_id.exists' => 'Dosen tidak ditemukan',
-                'ruangan_id.required' => 'Ruangan harus diisi',
-                'ruangan_id.exists' => 'Ruangan tidak ditemukan',
+                'ruang_laboratorium_id.required' => 'Ruangan harus diisi',
+                'ruang_laboratorium_id.exists' => 'Ruangan tidak ditemukan',
                 'anggota_kelompok.required' => 'Anggota kelompok harus diisi',
             ]
         );
@@ -99,14 +100,15 @@ class PeminjamanController extends Controller
                 'waktu_pengembalian' => $request->waktu_pengembalian,
                 'matkul_id' => $request->matkul_id,
                 'dosen_id' => $request->dosen_id,
-                'ruangan_id' => $request->ruangan_id,
+                'ruang_laboratorium_id' => $request->ruang_laboratorium_id,
                 'anggota_kelompok' => $request->anggota_kelompok,
-                'status' => 'Menunggu',
+                'status' => 'Diproses',
+                'persetujuan' => 'Belum Diserahkan',
                 'dokumen_spo_id' => $request->dokumen_spo_id,
             ]);
 
             foreach ($dataKeranjang as $keranjang) {
-                Peminjaman::create([
+                PeminjamanDetail::create([
                     'peminjaman_id' => $peminjaman->id,
                     'alat_bahan_id' => $keranjang->alat_bahan_id,
                     'jumlah' => $keranjang->jumlah
@@ -115,13 +117,10 @@ class PeminjamanController extends Controller
 
             Keranjang::where('user_id', $userID)->delete();
             DB::commit();
-            return redirect()->route('informasi.index')->with('success', 'Peminjaman berhasil dibuat');
+            return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dibuat');
         } catch (\Throwable $e) {
             DB::rollBack();
             return back()->with('error', 'Peminjaman gagal dibuat: ' . $e->getMessage());
         }
-
-
-        return redirect()->route('informasi.index')->with('success', 'Peminjaman berhasil dibuat');
     }
 }

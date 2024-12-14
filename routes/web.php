@@ -18,6 +18,7 @@ use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\Pengguna\BerandaController;
 use App\Http\Controllers\WEB\Pengguna\DetailController;
+use App\Http\Controllers\WEB\Pengguna\InformasiController;
 use App\Http\Controllers\WEB\Pengguna\KatalogController;
 use App\Http\Controllers\WEB\Pengguna\KeranjangController;
 use App\Http\Controllers\WEB\Pengguna\PeminjamanController;
@@ -69,8 +70,13 @@ Route::middleware('auth:admin-staff')->group(function () {
         Route::post('import-ruang-laboratorium', [RuangLaboratoriumController::class, 'importRuangLaboratorium'])->name('import-ruang-laboratorium');
 
         Route::prefix('verifikasi')->group(function () {
-            Route::resource('peminjaman', VerifikasiPeminjamanController::class);
-            Route::resource('pengembalian', VerifikasiPengembalianController::class);
+            Route::get('peminjaman', [VerifikasiPeminjamanController::class, 'index'])->name('verifikasi-peminjaman.index');
+
+            Route::put('/verifikasi/status/{id}', [VerifikasiPeminjamanController::class, 'updateStatus'])->name('staff.updateStatus');
+            Route::put('/verifikasi/persetujuan/{id}', [VerifikasiPeminjamanController::class, 'updatePersetujuan'])->name('staff.updatePersetujuan');
+
+
+            Route::get('pengembalian', [VerifikasiPengembalianController::class, 'index'])->name('verifikasi-pengembalian.index');
         });
     });
 
@@ -83,4 +89,9 @@ Route::middleware('MultiAuth:mahasiswa')->group(function () {
     Route::resource('detail', DetailController::class);
     Route::resource('keranjang', KeranjangController::class);
     Route::resource('peminjaman', PeminjamanController::class);
+    Route::prefix('informasi')->group(function () {
+        Route::get('peminjaman', [InformasiController::class, 'peminjamanIndex'])->name('peminjaman.index');
+        Route::get('pengembalian', [InformasiController::class, 'pengembalianIndex'])->name('pengembalian.index');
+
+    });
 });

@@ -15,7 +15,10 @@
                         d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
                 </svg>
                 <div
-                    class="absolute block w-3 h-3 bg-red-500 border-2 border-white rounded-full -top-0.5 start-2.5 dark:border-gray-900">{{ $notifikasiKeranjang ?? 0 }}
+                    class="absolute block w-5 h-5 bg-red-500 border-2 border-white rounded-full -top-0.5 start-2.5 dark:border-gray-900">
+                    <p class="text-white text-xs">
+                        {{ $dataKeranjang->count() ?? 0 }}
+                    </p>
                 </div>
             </button>
 
@@ -29,12 +32,14 @@
                 </div>
                 <div class="divide-y divide-gray-100 dark:divide-gray-700">
                     <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                        @if($dataKeranjang->isNotEmpty())
-                            @foreach($dataKeranjang as $item)
+                        @if ($dataKeranjang->isNotEmpty())
+                            @foreach ($dataKeranjang as $item)
                                 <div class="flex items-center px-4 py-3">
                                     <div class="flex-1">
-                                        <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{ $item->alatBahan->nama }}</h4>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah: {{ $item->jumlah }}</p>
+                                        <h4 class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ $item->alatBahan->nama }}</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah: {{ $item->jumlah }}
+                                        </p>
                                     </div>
                                 </div>
                             @endforeach
@@ -122,11 +127,38 @@
            {{ Route::is('ruangan.index') ? 'text-white bg-green-700 md:text-green-700 md:bg-transparent' : 'text-gray-900 md:hover:text-green-700 dark:text-white dark:hover:bg-gray-700' }}">Ruangan</a>
                 </li>
                 <li>
+                    <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownInformasi"
+                        class="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent">Informasi
+                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 4 4 4-4" />
+                        </svg></button>
+                    <!-- Dropdown menu -->
+                    <div id="dropdownInformasi"
+                        class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropdownLargeButton">
+                            <li>
+                                <a href="{{ route('peminjaman.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Peminjaman</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('pengembalian.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pengembalian</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
                     <a href=""
                         class="block py-2 px-3 rounded md:border-0 md:p-0
-           {{ Route::is('informasi.index') ? 'text-white bg-green-700 md:text-green-700 md:bg-transparent' : 'text-gray-900 md:hover:text-green-700 dark:text-white dark:hover:bg-gray-700' }}">Informasi</a>
+           {{ Route::is('') ? 'text-white bg-green-700 md:text-green-700 md:bg-transparent' : 'text-gray-900 md:hover:text-green-700 dark:text-white dark:hover:bg-gray-700' }}">Riwayat
+                        Peminjaman</a>
                 </li>
             </ul>
         </div>
     </div>
+
 </nav>

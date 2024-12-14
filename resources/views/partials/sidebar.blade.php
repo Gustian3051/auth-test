@@ -104,12 +104,12 @@
                     </a>
                     <ul id="verifikasi" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="{{ route('peminjaman.index') }}"
-                                class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group dark:text-gray-100 hover:bg-green-800 hover:text-white {{ Route::is('admin-staff.index') ? 'bg-green-500 text-white' : '' }}">Peminjaman</a>
+                            <a href="{{ route('verifikasi-peminjaman.index') }}"
+                                class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group dark:text-gray-100 hover:bg-green-800 hover:text-white {{ Route::is('verifikasi-peminjaman.index') ? 'bg-green-500 text-white' : '' }}">Peminjaman</a>
                         </li>
                         <li>
-                            <a href="{{ route('pengembalian.index') }}"
-                                class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group dark:text-gray-100 hover:bg-green-800 hover:text-white {{ Route::is('mahasiswa.index') ? 'bg-green-500 text-white' : '' }}">Pengembalian</a>
+                            <a href="{{ route('verifikasi-pengembalian.index') }}"
+                                class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group dark:text-gray-100 hover:bg-green-800 hover:text-white {{ Route::is('verifikasi-pengembalian.index') ? 'bg-green-500 text-white' : '' }}">Pengembalian</a>
                         </li>
                     </ul>
                 </li>

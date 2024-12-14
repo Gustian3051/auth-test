@@ -80,7 +80,7 @@ class KeranjangController extends Controller
                 'jumlah' => $request->jumlah,
             ]);
         }
-        return redirect()->route('beranda.index')->with('success', 'Barang berhasil ditambahkan ke keranjang');
+        return redirect()->route('katalog.index')->with('success', 'Barang berhasil ditambahkan ke keranjang');
     }
 
     /**

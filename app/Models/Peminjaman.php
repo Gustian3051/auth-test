@@ -20,6 +20,7 @@ class Peminjaman extends Model
         'tanggal_waktu_peminjaman',
         'waktu_pengembalian',
         'status',
+        'persetujuan',
         'dokumen_spo_id',
         'anggota_kelompok',
     ];

@@ -38,11 +38,11 @@
                 <div class="mt-4">
                     <div id="tableVerifikasiPeminjaman">
                         @include('partials.tables.table-verifikasi-peminjaman', [
-                            'dataVerifikasiPeminjaman' => $dataVerifikasiPeminjaman,
+                            'peminjaman' => $peminjaman,
                         ])
                     </div>
                     <div class="mt-3">
-                        {{ $dataVerifikasiPeminjaman->links() }}
+                        {{-- {{ $dataVerifikasiPeminjaman->links() }} --}}
                     </div>
                 </div>
             </div>

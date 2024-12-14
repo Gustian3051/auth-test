@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WEB\AdminStaff;
 
 use App\Http\Controllers\Controller;
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
 class VerifikasiPengembalianController extends Controller
@@ -10,9 +11,18 @@ class VerifikasiPengembalianController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        //
+        $pengembalian = Peminjaman::where('persetujuan', 'Diserahkan')->with([
+            'user',
+            'peminjamanDetail.alatBahan',
+        ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.admin-staff.staff.verifikasi-pengembalian.index', [
+            'pengembalian' => $pengembalian,
+        ]);
     }
 
     /**

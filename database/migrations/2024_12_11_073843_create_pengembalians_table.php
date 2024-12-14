@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('peminjaman_id');
+            $table->dateTime('waktu_tanggal_pengembalian')->nullable();
+            $table->string('status')->default('Menunggu Verifikasi');
+            $table->text('catatan')->nullable(); // Catatan tambahan
+
+
+            $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
             $table->timestamps();
         });
     }
