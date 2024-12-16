@@ -16,7 +16,8 @@ class Matkul extends Model
         'nama_matkul',
     ];
 
-    public function peminjaman() {
-        return $this->hasMany(Peminjaman::class, 'matkul_id');
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class);
     }
 }

@@ -17,10 +17,7 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $userID = auth()->id;
-        $dataPeminjaman = Peminjaman::with('details.alatBahan')->where('user_id', $userID)->orderBy('created_at', 'desc')->get();
-
-        return view('pages.pengguna.peminjaman.index', compact('dataPeminjaman'));
+        //
     }
 
     public function create()
@@ -111,7 +108,8 @@ class PeminjamanController extends Controller
                 PeminjamanDetail::create([
                     'peminjaman_id' => $peminjaman->id,
                     'alat_bahan_id' => $keranjang->alat_bahan_id,
-                    'jumlah' => $keranjang->jumlah
+                    'jumlah' => $keranjang->jumlah,
+                    'tindakan_SPO' => $keranjang->tindakan_SPO,
                 ]);
             }
 

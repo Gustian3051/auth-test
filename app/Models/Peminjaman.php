@@ -19,7 +19,6 @@ class Peminjaman extends Model
         'ruang_laboratorium_id',
         'tanggal_waktu_peminjaman',
         'waktu_pengembalian',
-        'status',
         'persetujuan',
         'dokumen_spo_id',
         'anggota_kelompok',
@@ -30,28 +29,36 @@ class Peminjaman extends Model
         return $this->morphTo();
     }
 
-    public function peminjamanDetail()
+    public function ruangLaboratorium()
     {
-        return $this->hasMany(PeminjamanDetail::class, 'peminjaman_id');
-    }
-
-    public function matkul()
-    {
-        return $this->belongsTo(Matkul::class, 'matkul_id');
+        return $this->belongsTo(RuangLaboratorium::class);
     }
 
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class);
     }
 
-    public function ruangLaboratorium()
+    public function matkul()
     {
-        return $this->belongsTo(RuangLaboratorium::class, 'ruang_laboratorium_id');
+        return $this->belongsTo(Matkul::class);
     }
 
     public function dokumenSpo()
     {
-        return $this->belongsTo(DokumenSpo::class, 'dokumen_spo_id');
+        return $this->belongsTo(DokumenSPO::class);
     }
+
+
+
+    public function peminjamanDetail()
+    {
+        return $this->hasMany(PeminjamanDetail::class);
+    }
+
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class);
+    }
+
 }

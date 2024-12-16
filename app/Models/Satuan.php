@@ -13,10 +13,11 @@ class Satuan extends Model
 
     protected $fillable = [
         'satuan',
+
     ];
 
     public function alatbahan()
     {
-        return $this->hasMany(AlatBahan::class);
+        return $this->hasMany(AlatBahan::class, 'satuan_id');
     }
 }

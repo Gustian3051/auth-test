@@ -19,8 +19,13 @@ class DokumenSPO extends Model
         'updated_at',
     ];
 
+    public function getFileUrlAttribute()
+    {
+        return asset('storage/' . $this->file_dokumen);
+    }
+
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'dokumen_spo_id');
+        return $this->hasMany(Peminjaman::class);
     }
 }

@@ -23,7 +23,6 @@
             <div class="p-4 md:p-5 space-y-4">
                 <form action="{{ route('peminjaman.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @if (Auth::guard('mahasiswa')->check())
                         <div class="mb-5">
                             <label for="nama"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
@@ -45,7 +44,6 @@
                                 class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>
 
-                        {{-- START SELECT DOSEN --}}
                         <div class="mb-5">
                             <label for="dosen_id"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dosen</label>
@@ -60,7 +58,6 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        {{-- END SELECT DOSEN --}}
 
                         <div class="mb-5">
                             <label for="matkul_id"
@@ -113,57 +110,23 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Dokumen SPO</option>
                                 @foreach ($dokumenSpo as $data)
-                                    <option value="{{ $data->id }}">{{ $data->nama_dokumen }}
-                                    </option>
+                                    <option value="{{ $data->id }}">{{ $data->nama_dokumen }}</option>
                                 @endforeach
                             </select>
-                            <div class="mt-2">
-                                <ul>
-                                    @foreach ($dokumenSpo as $data)
-                                        <li>
-                                            <a href="{{ asset('storage/' . $data->file_path) }}" download
-                                                class="text-blue-500 hover:underline text-sm">
-                                                Download {{ $data->nama_dokumen }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                            <div class="mt-2 space-y-2">
+                                @foreach ($dokumenSpo as $data)
+                                    <div class="flex items-center space-x-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+                                        </svg>
+                                        <a href="{{ asset('storage/' . $data->file_path) }}" download
+                                            class="text-blue-500 hover:underline text-sm">
+                                            {{ $data->nama_dokumen }}
+                                        </a>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
-                    @elseif(Auth::guard('dosen')->check())
-                        <div class="mb-5">
-                            <label for="nama"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
-                                Dosen</label>
-                            <input type="nama" id="nama" value="{{ auth()->user()->nama }}" disabled
-                                class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                        </div>
-
-                        <div class="mb-5">
-                            <label for="tanggal_waktu_peminjaman"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Tanggal & Waktu Peminjaman
-                            </label>
-                            <input type="datetime-local" name="tanggal_waktu_peminjaman" id="tanggal_waktu_peminjaman"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                        </div>
-
-                        <div class="mb-5">
-                            <label for="waktu_pengembalian"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Waktu Pengembalian
-                            </label>
-                            <input type="time" name="waktu_pengembalian" id="waktu_pengembalian"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                        </div>
-
-                        <div class="mb-5">
-                            <label for="keterangan"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
-                            <input type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                        </div>
-                    @endif
 
                     <button data-modal-hide="form-peminjaman" type="submit"
                         class="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Submit</button>

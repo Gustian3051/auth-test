@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('keranjangs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('user_type'); // Untuk menentukan jenis pengguna (dosen, mahasiswa)
+            $table->unsignedBigInteger('user_id'); // ID pengguna
+            $table->string('user_type'); // Polymorphic relationship
             $table->foreignId('alat_bahan_id')->constrained('alat_bahans')->onDelete('cascade');
             $table->integer('jumlah')->unsigned()->default(1);
             $table->string('tindakan_SPO')->nullable();

@@ -2,22 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\Kategori;
+use App\Models\DokumenSPO;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class KategoriSedder extends Seeder
+class DokumenSpoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Kategori::create([
-            'kategori' => 'Alat'
-        ]);
-        Kategori::create([
-            'kategori' => 'Bahan'
+        DokumenSPO::create([
+            'nama_dokumen' => 'Dokumen SPO',
+            'file_dokumen' => 'path/to/file.pdf',
         ]);
     }
 }

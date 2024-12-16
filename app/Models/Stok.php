@@ -18,16 +18,16 @@ class Stok extends Model
 
     public function alatBahan()
     {
-        return $this->belongsTo(AlatBahan::class, 'alat_bahan_id');
+        return $this->belongsTo(AlatBahan::class);
     }
 
-    public function peminjaman()
-    {
-        return $this->hasMany(Peminjaman::class, 'stok_id');
-    }
+    // public function peminjaman()
+    // {
+    //     return $this->hasMany(Peminjaman::class, 'stok_id');
+    // }
 
-    public function peminjamanDetail()
-    {
-        return $this->hasMany(PeminjamanDetail::class, 'stok_id');
-    }
+    // public function peminjamanDetail()
+    // {
+    //     return $this->hasMany(PeminjamanDetail::class, 'stok_id');
+    // }
 }

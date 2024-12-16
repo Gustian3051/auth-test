@@ -58,6 +58,7 @@ class KeranjangController extends Controller
             [
                 'alat_bahan_id' => 'required|exists:alat_bahans,id',
                 'jumlah' => 'required|int|min:1',
+                'tindakan_SPO' => 'nullable|string',
             ]
         );
 
@@ -78,6 +79,7 @@ class KeranjangController extends Controller
                 'user_type' => $userType,
                 'alat_bahan_id' => $request->alat_bahan_id,
                 'jumlah' => $request->jumlah,
+                'tindakan_SPO' => $request->tindakan_SPO,
             ]);
         }
         return redirect()->route('katalog.index')->with('success', 'Barang berhasil ditambahkan ke keranjang');

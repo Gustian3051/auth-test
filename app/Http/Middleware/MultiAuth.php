@@ -23,6 +23,6 @@ class MultiAuth
             }
         }
 
-        return redirect('login.index');
+        return redirect('login');
     }
 }

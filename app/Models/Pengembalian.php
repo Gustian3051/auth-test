@@ -14,9 +14,26 @@ class Pengembalian extends Model
     protected $fillable = [
         'peminjaman_id',
         'waktu_tanggal_pengembalian',
-        'status',
+        'persetujuan',
         'catatan',
     ];
+
+
+    public function peminjaman()
+    {
+        return $this->belongsTo(Peminjaman::class);
+    }
+
+    public function pengembalianDetail()
+    {
+        return $this->hasMany(PengembalianDetail::class);
+    }
+
+    // public function user()
+    // {
+    //     return $this->morphTo();
+    // }
+
 
 
 }

@@ -77,13 +77,14 @@ Route::middleware('auth:admin-staff')->group(function () {
 
 
             Route::get('pengembalian', [VerifikasiPengembalianController::class, 'index'])->name('verifikasi-pengembalian.index');
+            Route::post('/verifikass-pengembalian/{pengembalian}', [VerifikasiPengembalianController::class, 'verifiaksi'])->name('pengembalian.verifikasi');
         });
     });
 
 
 });
 
-Route::middleware('MultiAuth:mahasiswa')->group(function () {
+Route::middleware('MultiAuth:mahasiswa,dosen')->group(function () {
     Route::resource('beranda', BerandaController::class);
     Route::resource('katalog', KatalogController::class);
     Route::resource('detail', DetailController::class);
@@ -91,7 +92,9 @@ Route::middleware('MultiAuth:mahasiswa')->group(function () {
     Route::resource('peminjaman', PeminjamanController::class);
     Route::prefix('informasi')->group(function () {
         Route::get('peminjaman', [InformasiController::class, 'peminjamanIndex'])->name('peminjaman.index');
+
         Route::get('pengembalian', [InformasiController::class, 'pengembalianIndex'])->name('pengembalian.index');
+        Route::post('proses-pengembalian/{pengembalian_id}', [InformasiController::class, 'prosesPengembalian'])->name('pengembalian.proses');
 
     });
 });

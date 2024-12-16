@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Prompts\Table;
 
 return new class extends Migration
 {
@@ -11,18 +12,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('peminjaman_details', function (Blueprint $table) {
+        Schema::create('pengembalian_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('peminjaman_id');
+            $table->unsignedBigInteger('pengembalian_id');
             $table->unsignedBigInteger('alat_bahan_id');
             $table->integer('jumlah')->unsigned()->default(1);
-            $table->string('tindakan_SPO')->nullable();
-            $table->enum('status', ['Diproses', 'Diterima', 'Ditolak'])->default('Diproses');
-            $table->string('alasan_penolakan')->nullable();
+            $table->enum('kondisi', ['Rusak', 'Hilang', 'Habis', 'Dikembalikan'])->default('Dikembalikan');
+            $table->text('catatan')->nullable();
+            $table->timestamps();
 
             $table->foreign('alat_bahan_id')->references('id')->on('alat_bahans')->onDelete('cascade');
-            $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('pengembalian_id')->references('id')->on('pengembalians')->onDelete('cascade');
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman_details');
+        Schema::dropIfExists('pengembalian_details');
     }
 };

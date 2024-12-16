@@ -2,6 +2,27 @@
 
 @section('content')
     @include('partials.navbar.pengguna-navbar')
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: "#3085d6",
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: "#3085d6",
+            });
+        </script>
+    @endif
     <div class="w-full  p-6 mx-auto mt-14">
         <div class="mt-5 bg-white p-4 text-green-500 rounded-xl text-2xl font-semibold text-center shadow-lg">
             Informasi Pengembalian

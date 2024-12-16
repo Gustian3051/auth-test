@@ -47,14 +47,10 @@
                                     <div class="flex items-center gap-2">
                                         @if (!empty($data->alatBahan))
                                             <!-- Tampilkan Barang -->
-                                            <img src="{{ asset($data->foto ?? 'image/barang.png') }}" class="w-12"
-                                                alt="{{ $data->foto }}">
-                                            <p class="text-sm">{{ $data->nama }}</p>
-                                            {{-- @elseif (!empty($data->ruangan))
-                                            <!-- Tampilkan Ruangan -->
-                                            <img src="{{ asset($data->ruangan->foto ?? 'image/barang.png') }}"
-                                                class="w-12" alt="{{ $data->ruangan->foto }}">
-                                            <p class="text-sm">{{ $data->ruangan->nama_ruangan }}</p> --}}
+                                            <img src="{{ asset($data->alatBahan->foto ?? 'image/barang.png') }}"
+                                                class="w-16 h-16" alt="gambar">
+                                            <p class="text-sm ms-2">{{ $data->alatBahan->nama }}</p>
+
                                         @endif
                                     </div>
                                 </div>
@@ -67,10 +63,18 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="text-sm text-red-500 hover:underline">Hapus</button>
+                                            class="text-sm text-red-500 hover:underline">Hapus</button>
                                         </form>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="mt-4">
+                                <label for="tindakan_SPO_{{ $data->id }}"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left">
+                                    Tindakan SPO
+                                </label>
+                                <textarea id="tindakan_SPO_{{ $data->id }}" rows="4" name="tindakan_SPO" readonly
+                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{{ $data->tindakan_SPO ?? '-' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -78,16 +82,11 @@
 
                 <hr class="my-5" />
                 <button data-modal-target="form-peminjaman" data-modal-toggle="form-peminjaman"
-                    class="px-4 py-2 w-full text-white bg-green-500 rounded-lg hover:bg-green-800" type="button">Form Peminjaman
+                    class="px-4 py-2 w-full text-white bg-green-500 rounded-lg hover:bg-green-800" type="button">Form
+                    Peminjaman
                 </button>
 
                 @include('partials.modals.tambah.modal-peminjaman')
-
-
-
-
-
-
             @endif
         </div>
     </div>

@@ -14,14 +14,9 @@ class AlatBahan extends Model
     protected $fillable = [
         'nama',
         'kategori_id',
-        'satuan_id',
+        'satuans_id',
         'foto',
     ];
-
-    public function keranjangs()
-    {
-        return $this->hasMany(Keranjang::class, 'alat_bahan_id');
-    }
 
     public function kategori()
     {
@@ -35,6 +30,22 @@ class AlatBahan extends Model
 
     public function stok()
     {
-        return $this->hasOne(Stok::class, 'alat_bahan_id', 'id');
+        return $this->hasOne(Stok::class);
     }
+
+    public function peminjamanDetail()
+    {
+        return $this->hasMany(PeminjamanDetail::class);
+    }
+
+    public function pengembalianDetail()
+    {
+        return $this->hasMany(PengembalianDetail::class);
+    }
+
+    public function keranjangs()
+    {
+        return $this->hasMany(Keranjang::class, 'alat_bahan_id');
+    }
+
 }

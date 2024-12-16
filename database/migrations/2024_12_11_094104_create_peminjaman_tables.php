@@ -20,7 +20,6 @@ return new class extends Migration
                 $table->unsignedBigInteger('ruang_laboratorium_id');
                 $table->dateTime('tanggal_waktu_peminjaman');
                 $table->time('waktu_pengembalian')->nullable();
-                $table->enum('status', ['Diproses', 'Diterima', 'Ditolak'])->default('Diproses');
                 $table->enum('persetujuan', ['Belum Diserahkan', 'Diserahkan'])->default('Belum Diserahkan');
                 $table->unsignedBigInteger('dokumen_spo_id')->nullable();
                 $table->string('anggota_kelompok')->nullable();

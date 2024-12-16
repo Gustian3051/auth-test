@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\Kategori;
+use App\Models\RuangLaboratorium;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class KategoriSedder extends Seeder
+class RuanganLaboratoriumSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Kategori::create([
-            'kategori' => 'Alat'
+        RuangLaboratorium::create([
+            'nama' => 'Laboratorium Komputer',
         ]);
-        Kategori::create([
-            'kategori' => 'Bahan'
+        RuangLaboratorium::create([
+            'nama' => 'HPC',
         ]);
     }
 }

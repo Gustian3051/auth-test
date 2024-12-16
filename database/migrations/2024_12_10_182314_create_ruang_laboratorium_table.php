@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ruang_laboratorium', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

@@ -17,5 +17,9 @@ class StokSeeder extends Seeder
             'alat_bahan_id' => 1,
             'stok' => 10
         ]);
+        Stok::create([
+            'alat_bahan_id' => 2,
+            'stok' => 10
+        ]);
     }
 }

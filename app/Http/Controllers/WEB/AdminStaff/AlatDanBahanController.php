@@ -21,7 +21,7 @@ class AlatDanBahanController extends Controller
         $dataKategori = Kategori::all();
         $dataSatuan = Satuan::all();
 
-        $query = AlatBahan::query();
+        $query = AlatBahan::with(['kategori', 'satuan', 'stok']);
 
         if ($request->filled('search')) {
             $search = $request->search;

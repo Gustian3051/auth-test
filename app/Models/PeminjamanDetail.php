@@ -15,13 +15,17 @@ class PeminjamanDetail extends Model
         'peminjaman_id',
         'alat_bahan_id',
         'jumlah',
-
+        'tindakan_SPO',
+        'status',
+        'alasan_penolakan',
     ];
 
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class) ;
     }
+
+    
 
     public function alatBahan()
     {

@@ -9,7 +9,23 @@ class PengembalianDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'pengembalian_detail';
+    protected $table = 'pengembalian_details';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'pengembalian_id',
+        'alat_bahan_id',
+        'jumlah',
+        'kondisi',
+        'catatan',
+    ];
+
+    public function alatBahan()
+    {
+        return $this->belongsTo(AlatBahan::class);
+    }
+
+    public function pengembalian()
+    {
+        return $this->belongsTo(Pengembalian::class);
+    }
 }

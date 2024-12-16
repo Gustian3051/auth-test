@@ -16,5 +16,8 @@ class SatuanSeeder extends Seeder
         Satuan::create([
             'satuan' => 'Unit',
         ]);
+        Satuan::create([
+            'satuan' => 'Liter',
+        ]);
     }
 }

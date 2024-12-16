@@ -51,8 +51,6 @@
                     <div id="tableAlatBahan">
                         @include('partials.tables.table-data-alat-bahan', [
                             'dataAlatBahan' => $dataAlatBahan,
-                            'dataKategori' => $dataKategori,
-                            'dataSatuan' => $dataSatuan
                         ])
                     </div>
                     <div class="mt-3">

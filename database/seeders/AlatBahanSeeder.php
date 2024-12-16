@@ -14,9 +14,16 @@ class AlatBahanSeeder extends Seeder
     public function run(): void
     {
         AlatBahan::create([
-            'nama' => 'Alat Bahan 1',
+            'nama' => 'Boneka',
             'kategori_id' => 1,
             'satuans_id' => 1,
+            'foto' => null,
+        ]);
+
+        AlatBahan::create([
+            'nama' => 'Bensin',
+            'kategori_id' => 2,
+            'satuans_id' => 2,
             'foto' => null,
         ]);
     }

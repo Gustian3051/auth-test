@@ -13,10 +13,11 @@ class RuangLaboratorium extends Model
 
     protected $fillable = [
         'nama',
+        'foto',
     ];
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'ruang_laboratorium_id');
+        return $this->hasMany(Peminjaman::class);
     }
 }

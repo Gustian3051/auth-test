@@ -22,9 +22,6 @@
                     Tanggal & Waktu Peminjaman
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Status
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Persetujuan
                 </th>
                 <th scope="col" class="px-6 py-3 text-center">
@@ -63,11 +60,6 @@
                         </td>
                         <td scope="col" class="px-6 py-3">
                             <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                {{ $data->status }}
-                            </span>
-                        </td>
-                        <td scope="col" class="px-6 py-3">
-                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
                                 {{ $data->persetujuan }}
                             </span>
                         </td>
@@ -81,11 +73,9 @@
                             </div>
                         </td>
                     </tr>
-
                     @include('partials.modals.detail.modal-verifikasi-peminjaman', [
                         'peminjaman' => $peminjaman,
                     ])
-
                 @endforeach
             @endif
 

@@ -23,8 +23,13 @@ class Mahasiswa extends Authenticatable
     ];
 
 
-    public function keranjangs()
+    public function keranjang()
     {
         return $this->morphMany(Keranjang::class, 'user');
+    }
+
+    public function peminjaman()
+    {
+        return $this->morphMany(Peminjaman::class, 'user');
     }
 }

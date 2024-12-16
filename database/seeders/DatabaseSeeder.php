@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             SatuanSeeder::class,
             AlatBahanSeeder::class,
             StokSeeder::class,
+            RuanganLaboratoriumSeeder::class,
+            MatkulSeeder::class
         ]);
     }
 }
