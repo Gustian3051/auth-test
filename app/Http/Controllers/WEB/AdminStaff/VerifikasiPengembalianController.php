@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\PengembalianDetail;
 use App\Models\Stok;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,16 +18,7 @@ class VerifikasiPengembalianController extends Controller
      */
     public function index()
     {
-        $pengembalian = Pengembalian::with([
-            'pengembalianDetail.alatBahan.kategori',
-            'pengembalianDetail.alatBahan.satuan',
-            'pengembalianDetail.pengembalian',
-            'peminjaman.peminjamanDetail',
-            'peminjaman.user',
-            'peminjaman.matkul',
-            'peminjaman.ruangLaboratorium',
-            'peminjaman.dosen',
-        ])->get();
+        $pengembalian = Pengembalian::with(['pengembalianDetail.alatBahan', 'peminjaman.user'])->where('persetujuan', 'Menunggu Verifikasi')->get();
 
         return view('pages.admin-staff.staff.verifikasi-pengembalian.index', [
             'pengembalian' => $pengembalian,
@@ -36,34 +28,51 @@ class VerifikasiPengembalianController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function verifikasi(Request $request, Pengembalian $pengembalian_id)
+    public function verifikasi(Request $request, $pengembalianId)
     {
+        $pengembalian = Pengembalian::with('pengembalianDetail')->find($pengembalianId);
+
         DB::beginTransaction();
         try {
-            $pengembalian = Pengembalian::with('pengembalianDetail')->findOrFail($pengembalian_id);
+            // Verifikasi persetujuan pengembalian
             $pengembalian->update([
-                'persetujuan' => 'Diserahkan',
+                'persetujuan' => 'Dikembalikan',
             ]);
 
             foreach ($pengembalian->pengembalianDetail as $detail) {
+                // Ambil data yang dikirimkan dari form
+                $jumlahKembali = $request->input('details.' . $detail->id . '.jumlah_kembali');
+                $kondisi = $request->input('details.' . $detail->id . '.kondisi');
+
+                // Cek stok berdasarkan alat bahan
                 $stok = Stok::where('alat_bahan_id', $detail->alat_bahan_id)->first();
-
-                if ($detail->kondisi === 'Dikembalikan') {
-                    $stok->increment('stok', $detail->jumlah);
-                } elseif ($detail->kondisi === 'Hilang') {
-                    $stok->decrement('stok', $detail->jumlah);
-                } elseif ($detail->kondisi === 'Rusak' || $detail->kondisi === 'Habis') {
-                    $stok->decrement('stok', $detail->jumlah);
+                if (!$stok) {
+                    throw new Exception('Stok alat bahan tidak ditemukan.');
                 }
-            }
-            DB::commit();
-            return redirect()->back()->with('success', 'Pengembalian diterima');
 
-        } catch (\Throwable $e) {
+                // Update stok alat bahan sesuai kondisi
+                if ($kondisi == 'Dikembalikan') {
+                    $stok->jumlah += $jumlahKembali;  // Menambah stok
+                } elseif ($kondisi == 'Habis' || $kondisi == 'Rusak' || $kondisi == 'Hilang') {
+                    $stok->jumlah -= $jumlahKembali;  // Mengurangi stok
+                }
+                $stok->save();
+
+                // Update detail pengembalian
+                $catatan = $request->input('details.' . $detail->id . '.catatan', 'Verifikasi Pengembalian Berhasil');
+                $detail->update([
+                    'catatan' => $catatan,
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Verifikasi pengembalian berhasil.');
+        } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat verifikasi pengembalian: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Store a newly created resource in storage.

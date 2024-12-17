@@ -4,13 +4,16 @@
         <thead class=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    No
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Nama Peminjam
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Ruang Praktikum
+                    Kelas
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Mata Kuliah
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Dosen Pengampu
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Waktu Pengembalian
@@ -24,24 +27,28 @@
             </tr>
         </thead>
         <tbody>
-            @if ($pengembalian->isEmpty())
+            @if ($peminjaman->isEmpty())
                 <tr>
                     <td colspan="9" class="px-6 py-3 text-center text-gray-500 border">
                         Tidak ada data peminjaman
                     </td>
                 </tr>
             @else
-                @foreach ($pengembalian as $data)
+                @foreach ($peminjaman as $data)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td scope="col" class="px-6 py-3">
-                            {{ $loop->iteration }}
-                        </td>
+                        
                         <td scope="col" class="px-6 py-3">
                             {{ $data->user->nama }}
                         </td>
                         <td scope="col" class="px-6 py-3">
-                            {{ $data->ruangLaboratorium->nama }}
+                            {{ $data->user->kelas }}
+                        </td>
+                        <td scope="col" class="px-6 py-3">
+                            {{ $data->matkul->nama_matkul }}
+                        </td>
+                        <td scope="col" class="px-6 py-3">
+                            {{ $data->dosen->nama }}
                         </td>
                         <td scope="col" class="px-6 py-3">
                             {{ $data->waktu_pengembalian ?? '-' }}
@@ -63,7 +70,7 @@
                     </tr>
 
                     @include('partials.modals.detail.modal-informasi-pengembalian', [
-                        'pengembalan' => $pengembalian,
+                        'peminjaman' => $peminjaman,
                     ])
 
                 @endforeach

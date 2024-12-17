@@ -12,12 +12,18 @@ class Pengembalian extends Model
     protected $table = 'pengembalians';
 
     protected $fillable = [
+        'user_id',
+        'user_type',
         'peminjaman_id',
         'waktu_tanggal_pengembalian',
         'persetujuan',
-        'catatan',
+        'tindakan_spo_pengguna',
     ];
 
+    public function user()
+    {
+        return $this->morphTo();
+    }
 
     public function peminjaman()
     {

@@ -4,13 +4,16 @@
 
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    No
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Nama Peminjam
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Ruang Praktikum
+                    Kelas
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Mata Kuliah
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Dosen Pengampu
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Waktu Pengembalian
@@ -31,13 +34,16 @@
                 <tr
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td scope="col" class="px-6 py-3">
-                        {{ $loop->iteration }}
-                    </td>
-                    <td scope="col" class="px-6 py-3">
                         {{ $data->peminjaman->user->nama }}
                     </td>
                     <td scope="col" class="px-6 py-3">
-                        {{ $data->peminjaman->ruangLaboratorium->nama }}
+                        {{ $data->peminjaman->user->kelas }}
+                    </td>
+                    <td scope="col" class="px-6 py-3">
+                        {{ $data->peminjaman->matkul->nama_matkul }}
+                    </td>
+                    <td scope="col" class="px-6 py-3">
+                        {{ $data->peminjaman->dosen->nama }}
                     </td>
                     <td scope="col" class="px-6 py-3">
                         {{ $data->peminjaman->waktu_pengembalian ?? '-' }}
@@ -64,7 +70,7 @@
                 ])
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-3 text-center text-gray-500 border">
+                    <td colspan="8" class="px-6 py-3 text-center text-gray-500 border">
                         Tidak ada data pengembalian
                     </td>
                 </tr>

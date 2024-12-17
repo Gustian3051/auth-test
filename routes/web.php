@@ -72,12 +72,12 @@ Route::middleware('auth:admin-staff')->group(function () {
         Route::prefix('verifikasi')->group(function () {
             Route::get('peminjaman', [VerifikasiPeminjamanController::class, 'index'])->name('verifikasi-peminjaman.index');
 
-            Route::put('/verifikasi/status/{id}', [VerifikasiPeminjamanController::class, 'updateStatus'])->name('staff.updateStatus');
+            Route::put('/verifikasi/status/{id}', [VerifikasiPeminjamanController::class, 'updateStatusBarang'])->name('staff.updateStatus');
             Route::put('/verifikasi/persetujuan/{id}', [VerifikasiPeminjamanController::class, 'updatePersetujuan'])->name('staff.updatePersetujuan');
 
 
             Route::get('pengembalian', [VerifikasiPengembalianController::class, 'index'])->name('verifikasi-pengembalian.index');
-            Route::post('/verifikass-pengembalian/{pengembalian}', [VerifikasiPengembalianController::class, 'verifiaksi'])->name('pengembalian.verifikasi');
+            Route::post('/verifikass-pengembalian/{pengembalian}', [VerifikasiPengembalianController::class, 'verifikasi'])->name('pengembalian.verifikasi');
         });
     });
 

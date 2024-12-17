@@ -10,6 +10,7 @@ use App\Models\Matkul;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanDetail;
 use App\Models\RuangLaboratorium;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -116,7 +117,7 @@ class PeminjamanController extends Controller
             Keranjang::where('user_id', $userID)->delete();
             DB::commit();
             return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dibuat');
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Peminjaman gagal dibuat: ' . $e->getMessage());
         }

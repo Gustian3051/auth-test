@@ -32,4 +32,9 @@ class Dosen extends Authenticatable
     {
         return $this->hasMany(Peminjaman::class, 'dosen_id');
     }
+
+    public function pengembalian()
+    {
+        return $this->morphMany(Pengembalian::class, 'user');
+    }
 }

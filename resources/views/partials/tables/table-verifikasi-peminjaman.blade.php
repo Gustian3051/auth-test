@@ -4,19 +4,16 @@
         <thead class=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    No
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Nama Peminjam
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Dosen Pengampu
+                    Kelas
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Mata Kuliah
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Ruang Praktikum
+                    Dosen Pengampu
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Tanggal & Waktu Peminjaman
@@ -41,22 +38,19 @@
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td scope="col" class="px-6 py-3">
-                            {{ $loop->iteration }}
-                        </td>
-                        <td scope="col" class="px-6 py-3">
                             {{ $data->user->nama }}
                         </td>
                         <td scope="col" class="px-6 py-3">
-                            {{ $data->dosen->nama }}
+                            {{ $data->user->kelas }}
                         </td>
                         <td scope="col" class="px-6 py-3">
                             {{ $data->matkul->nama_matkul }}
                         </td>
                         <td scope="col" class="px-6 py-3">
-                            {{ $data->ruangLaboratorium->nama }}
+                            {{ $data->dosen->nama }}
                         </td>
                         <td scope="col" class="px-6 py-3">
-                            {{ $data->tanggal_waktu_peminjaman ?? '-' }}
+                            {{ $data->tanggal_waktu_peminjaman}}
                         </td>
                         <td scope="col" class="px-6 py-3">
                             <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
@@ -65,8 +59,8 @@
                         </td>
                         <td scope="col" class="flex items-center gap-2 px-6 py-3 justify-center">
                             <div>
-                                <button type="button" data-modal-target="detail{{ $data->id }}"
-                                    data-modal-toggle="detail{{ $data->id }}"
+                                <button type="button" data-modal-target="peminjaman{{ $data->id }}"
+                                    data-modal-toggle="peminjaman{{ $data->id }}"
                                     class="flex items-center px-2 py-2 text-sm text-white bg-yellow-400 rounded">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>

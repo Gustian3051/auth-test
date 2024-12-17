@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\WEB\AdminStaff;
 
 use App\Http\Controllers\Controller;
+use App\Models\AlatBahan;
 use App\Models\Peminjaman;
+use App\Models\PeminjamanDetail;
 use App\Models\Pengembalian;
 use App\Models\VerifikasiPeminjaman;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ class VerifikasiPeminjamanController extends Controller
         $peminjaman = Peminjaman::whereIn('persetujuan', ['Belum Diserahkan', 'Diserahkan'])->with([
             'user',
             'peminjamanDetail.alatBahan',
+            'ruangLaboratorium.peminjaman',
         ])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -28,31 +31,46 @@ class VerifikasiPeminjamanController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|array', // Validasi status harus berupa array
-            'status.*' => 'required|in:Diproses,Diterima,Ditolak', // Setiap item di array status harus valid
-            'alasan_penolakan' => 'nullable|array', // Alasan penolakan berupa array (opsional)
-            'alasan_penolakan.*' => 'required_if:status.*,Ditolak', // Alasan wajib jika status Ditolak
-        ]);
 
-        // Cari peminjaman berdasarkan ID
+    public function updateStatusBarang(Request $request, string $id)
+    {
         $peminjaman = Peminjaman::findOrFail($id);
 
-        // Loop untuk update setiap detail
-        foreach ($peminjaman->peminjamanDetail as $detail) {
-            $status = $request->status[$detail->id] ?? 'Diproses';
-            $alasan = $request->alasan_penolakan[$detail->id] ?? null;
+        $request->validate([
+            'status' => 'required|array',
+            'status.*' => 'in:Diproses,Diterima,Ditolak',
+            'alasan_penolakan' => 'nullable|array'
+        ]);
 
-            $detail->update([
-                'status' => $status,
-                'alasan_penolakan' => $status == 'Ditolak' ? $alasan : null,
-            ]);
+        DB::beginTransaction();
+        try {
+            $statuses = $request->input('status', []);
+            $alasanPenolakan = $request->input('alasan_penolakan', []);
+
+            foreach ($peminjaman->peminjamanDetail as $detail) {
+                if (isset($statuses[$detail->id])) {
+                    $detail->status = $statuses[$detail->id];
+
+                    if ($detail->status == 'Ditolak') {
+                        $detail->jumlah = 0;
+                        $detail->alasan_penolakan = $alasanPenolakan[$detail->id] ?? 'Tidak ada alasan spesifik';
+                    } else {
+                        $detail->alasan_penolakan = null;
+                    }
+
+                    $detail->save();
+                }
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Status barang berhasil diperbarui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
         }
-
-        return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui.');
     }
+
 
 
     public function updatePersetujuan(Request $request, $id)
@@ -84,8 +102,13 @@ class VerifikasiPeminjamanController extends Controller
                 $pengembalian = Pengembalian::where('peminjaman_id', $peminjaman->id)->first(); // Ambil pengembalian berdasarkan peminjaman_id
                 if (!$pengembalian) {
                     $pengembalian = Pengembalian::updateOrCreate(
-                        ['peminjaman_id' => $peminjaman->id], // Kondisi pencarian
-                        ['persetujuan' => 'Belum Dikembalikan'] // Data yang akan dibuat jika tidak ada
+                        ['peminjaman_id' => $peminjaman->id],
+                        [
+                            'user_id' => $peminjaman->user_id,
+                            'user_type' => $peminjaman->user_type,
+                            'persetujuan' => 'Menunggu Verifikasi',
+                            'tindakan_spo_pengguna' => $peminjaman->tindakan_spo_pengguna
+                        ]
                     );
                 }
             }
@@ -118,51 +141,4 @@ class VerifikasiPeminjamanController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

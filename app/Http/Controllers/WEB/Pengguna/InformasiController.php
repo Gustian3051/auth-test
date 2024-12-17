@@ -8,6 +8,7 @@ use App\Models\Peminjaman;
 use App\Models\PeminjamanDetail;
 use App\Models\Pengembalian;
 use App\Models\PengembalianDetail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +57,8 @@ class InformasiController extends Controller
         ]);
     }
 
+
+
     public function pengembalianIndex()
     {
         // Ambil user yang sedang login
@@ -73,73 +76,79 @@ class InformasiController extends Controller
 
             // Hitung jumlah total item di keranjang
             $notifikasiKeranjang = $dataKeranjang->sum('alat_bahan_id');
+
+            // Ambil data peminjaman terkait user yang login
+            $peminjaman = Peminjaman::with([
+                'matkul',
+                'ruangLaboratorium',
+                'dosen',
+                'peminjamanDetail.alatBahan',
+                'user',
+            ])->where('persetujuan', 'Diserahkan')->where('user_id', $userID)->orderBy('created_at', 'desc')->get();
+
+            // Kirim data ke view
+            return view('pages.pengguna.informasi.pengembalian', [
+                'peminjaman' => $peminjaman,
+                'dataKeranjang' => $dataKeranjang,
+                'notifikasiKeranjang' => $notifikasiKeranjang,
+                'userType' => $userType,
+                'userID' => $userID
+            ]);
         }
-
-        // Ambil data peminjaman terkait user yang login
-        $pengembalian = Peminjaman::where('persetujuan', 'Diserahkan')
-            ->where('user_id', $userID)
-            ->with('peminjamanDetail.alatBahan.stok')
-            ->get();
-
-        foreach ($pengembalian as $data) {
-            $data->barangDiterima = $data->peminjamanDetail->filter(function ($detail) {
-                return $detail->status == 'Diterima';
-            });
-        }
-
-        // Kirim data ke view
-        return view('pages.pengguna.informasi.pengembalian', [
-            'pengembalian' => $pengembalian,
-            'dataKeranjang' => $dataKeranjang,
-            'notifikasiKeranjang' => $notifikasiKeranjang,
-            'userType' => $userType,
-            'userID' => $userID
-        ]);
     }
 
-    public function prosesPengembalian(Request $request, Peminjaman $peminjaman_id)
+
+
+    public function prosesPengembalian(Request $request, $peminjamanId)
     {
         $request->validate([
-            'kondisi' => 'required|array', // Kondisi harus berupa array
-            'kondisi.*' => 'required|in:Hilang,Rusak,Habis,Dikembalikan', // Validasi setiap kondisi
-            'jumlah' => 'required|array',
-            'jumlah.*' => 'required|numeric|min:0', // Validasi jumlah minimal 1
-            'catatan' => 'nullable|string',
-            'jumlah_hilang' => 'nullable|array',
-            'jumlah_hilang.*' => 'nullable|numeric|min:0',
-            'jumlah_rusak' => 'nullable|array',
-            'jumlah_rusak.*' => 'nullable|numeric|min:0',
-            'jumlah_habis' => 'nullable|array',
-            'jumlah_habis.*' => 'nullable|numeric|min:0',
-            'catatan_hilang' => 'nullable|array',
-            'catatan_hilang.*' => 'nullable|string',
-
-
+            'jumlah_kembali' => 'required|array',
+            'jumlah_kembali.*' => 'required|integer|min:0',
+            'kondisi' => 'required|array',
+            'kondisi.*' => 'required|in:Dikembalikan,Hilang,Rusak,Habis',
+            'tindakan_spo_pengguna' => 'required|string',
         ]);
 
+        $userID = auth()->id();
+        $userType = auth()->user()->getMorphClass();
+        $peminjaman = Peminjaman::with('peminjamanDetail.alatBahan')->findOrFail($peminjamanId);
+
+        if ($peminjaman->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengembalikan peminjaman ini.');
+        }
+
         DB::beginTransaction();
-
-        try {
-            $peminjaman = Peminjaman::with('peminjamanDetail')->findOrFail($peminjaman_id);
-
-            $pengembalian = Pengembalian::CreateOrUpdate(
-                [
-                    'peminjaman_id' => $peminjaman_id,
-                    'catatan' => $request->catatan,
-                    'persetujuan' => 'Menunggu Verifikasi',
-                ]
-            );
+        try{
+            $pengembalian = Pengembalian::firstOrCreate([
+                'user_id' => $userID,
+                'user_type' => $userType,
+                'peminjaman_id' => $peminjamanId,
+                'persetujuan' => 'Menunggu Verifikasi',
+                'tindakan_spo_pengguna' => $request->tindakan_spo_pengguna,
+            ]);
 
             foreach ($peminjaman->peminjamanDetail as $detail) {
-                $kondisi = $request->kondisi[$detail->id] ?? null;
-                $jumlah = $request->jumlah[$detail->id] ?? 0;
-            }
-            DB::commit();
+                $jumlahKembali = $request->input('jumlah_kembali.' . $detail->id, 0);
+                $kondisi = $request->input('kondisi.' . $detail->id);
 
-            return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diajukan.');
-        } catch (\Throwable $e) {
+                if ($jumlahKembali > $detail->jumlah) {
+                    return redirect()->back()->with('error', 'Jumlah kembali melebihi batas peminjaman.');
+                }
+
+                PengembalianDetail::create([
+                    'pengembalian_id' => $pengembalian->id,
+                    'alat_bahan_id' => $detail->alat_bahan_id,
+                    'jumlah_pinjam' => $detail->jumlah,
+                    'jumlah_kembali' => $jumlahKembali,
+                    'kondisi' => $kondisi,
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Pengembalian berhasil diserahkan.');
+        } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengajukan pengembalian: ' . $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

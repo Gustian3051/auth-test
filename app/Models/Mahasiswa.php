@@ -32,4 +32,9 @@ class Mahasiswa extends Authenticatable
     {
         return $this->morphMany(Peminjaman::class, 'user');
     }
+
+    public function pengembalian()
+    {
+        return $this->morphMany(Pengembalian::class, 'user');
+    }
 }
