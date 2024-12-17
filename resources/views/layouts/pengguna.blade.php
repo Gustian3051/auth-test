@@ -51,7 +51,28 @@
 </head>
 
 <body class="bg-gray-100">
-    
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: "#3085d6",
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: "#3085d6",
+            });
+        </script>
+    @endif
     <div class="flex flex-col min-h-screen">
         @yield('content')
     </div>

@@ -18,10 +18,13 @@ use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\Pengguna\BerandaController;
 use App\Http\Controllers\WEB\Pengguna\DetailController;
+use App\Http\Controllers\WEB\Pengguna\EditPasswordController;
+use App\Http\Controllers\WEB\Pengguna\EditProfileController;
 use App\Http\Controllers\WEB\Pengguna\InformasiController;
 use App\Http\Controllers\WEB\Pengguna\KatalogController;
 use App\Http\Controllers\WEB\Pengguna\KeranjangController;
 use App\Http\Controllers\WEB\Pengguna\PeminjamanController;
+use App\Http\Controllers\WEB\Pengguna\ProfileController;
 use App\Models\Matkul;
 use Illuminate\Support\Facades\Route;
 
@@ -90,6 +93,9 @@ Route::middleware('MultiAuth:mahasiswa,dosen')->group(function () {
     Route::resource('detail', DetailController::class);
     Route::resource('keranjang', KeranjangController::class);
     Route::resource('peminjaman', PeminjamanController::class);
+    Route::resource('edit-profile', EditProfileController::class);
+    Route::resource('edit-password', EditPasswordController::class);
+
     Route::prefix('informasi')->group(function () {
         Route::get('peminjaman', [InformasiController::class, 'peminjamanIndex'])->name('peminjaman.index');
 
