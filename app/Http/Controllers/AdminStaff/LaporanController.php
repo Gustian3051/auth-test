@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\WEB\AdminStaff;
+namespace App\Http\Controllers\AdminStaff;
 
 use App\Http\Controllers\Controller;
-use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
@@ -13,13 +12,7 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        $laporan = Peminjaman::with(['peminjamanDetail.alatBahan', 'pengembalian'])
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-        return view('pages.admin-staff.laporan.index', [
-            'laporan' => $laporan
-        ]);
+        //
     }
 
     /**

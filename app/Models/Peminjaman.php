@@ -61,4 +61,8 @@ class Peminjaman extends Model
         return $this->hasOne(Pengembalian::class);
     }
 
+    // public function pengembalianDetail()
+    // {
+    //     return $this->hasMany(PengembalianDetail::class);
+    // }
 }

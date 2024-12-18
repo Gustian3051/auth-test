@@ -18,7 +18,7 @@ class VerifikasiPeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman = Peminjaman::whereIn('persetujuan', ['Belum Diserahkan', 'Diserahkan'])->with([
+        $peminjaman = Peminjaman::whereIn('persetujuan', ['Belum Diserahkan'])->with([
             'user',
             'peminjamanDetail.alatBahan',
             'ruangLaboratorium.peminjaman',
