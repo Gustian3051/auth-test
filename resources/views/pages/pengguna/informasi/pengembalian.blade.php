@@ -26,7 +26,7 @@
         </div>
 
         @include('partials.tables.table-data-informasi-pengembalian', [
-            'peminjaman' => $peminjaman,
+            'pengembalian' => $pengembalian,
         ])
 
     </div>

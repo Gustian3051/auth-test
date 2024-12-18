@@ -78,17 +78,17 @@ class InformasiController extends Controller
             $notifikasiKeranjang = $dataKeranjang->sum('alat_bahan_id');
 
             // Ambil data peminjaman terkait user yang login
-            $peminjaman = Peminjaman::with([
-                'matkul',
-                'ruangLaboratorium',
-                'dosen',
+            $pengembalian = Peminjaman::with([
                 'peminjamanDetail.alatBahan',
+                'ruangLaboratorium',
+                'matkul',
+                'dosen',
                 'user',
             ])->where('persetujuan', 'Diserahkan')->where('user_id', $userID)->orderBy('created_at', 'desc')->get();
 
             // Kirim data ke view
             return view('pages.pengguna.informasi.pengembalian', [
-                'peminjaman' => $peminjaman,
+                'pengembalian' => $pengembalian,
                 'dataKeranjang' => $dataKeranjang,
                 'notifikasiKeranjang' => $notifikasiKeranjang,
                 'userType' => $userType,
@@ -118,14 +118,18 @@ class InformasiController extends Controller
         }
 
         DB::beginTransaction();
-        try{
-            $pengembalian = Pengembalian::firstOrCreate([
-                'user_id' => $userID,
-                'user_type' => $userType,
-                'peminjaman_id' => $peminjamanId,
-                'persetujuan' => 'Menunggu Verifikasi',
-                'tindakan_spo_pengguna' => $request->tindakan_spo_pengguna,
-            ]);
+        try {
+            $pengembalian = Pengembalian::updateOrcreate(
+                [
+                    'peminjaman_id' => $peminjamanId,
+                    'user_id' => $userID,
+                    'user_type' => $userType,
+                ],
+                [
+                    'persetujuan' => 'Menunggu Verifikasi',
+                    'tindakan_spo_pengguna' => $request->tindakan_spo_pengguna,
+                ]
+            );
 
             foreach ($peminjaman->peminjamanDetail as $detail) {
                 $jumlahKembali = $request->input('jumlah_kembali.' . $detail->id, 0);
@@ -135,14 +139,22 @@ class InformasiController extends Controller
                     return redirect()->back()->with('error', 'Jumlah kembali melebihi batas peminjaman.');
                 }
 
-                PengembalianDetail::create([
-                    'pengembalian_id' => $pengembalian->id,
-                    'alat_bahan_id' => $detail->alat_bahan_id,
-                    'jumlah_pinjam' => $detail->jumlah,
-                    'jumlah_kembali' => $jumlahKembali,
-                    'kondisi' => $kondisi,
-                ]);
+                PengembalianDetail::updateOrCreate(
+                    [
+                        'pengembalian_id' => $pengembalian->id,
+                        'alat_bahan_id' => $detail->alat_bahan_id,
+                    ],
+                    [
+                        'jumlah_pinjam' => $detail->jumlah,
+                        'jumlah_kembali' => $jumlahKembali,
+                        'kondisi' => $kondisi,
+                    ]
+                );
             }
+
+            $pengembalian->update([
+                'persetujuan' => 'Menunggu Verifikasi',
+            ]);
 
             DB::commit();
             return redirect()->back()->with('success', 'Pengembalian berhasil diserahkan.');

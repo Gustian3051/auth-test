@@ -27,17 +27,17 @@
             </tr>
         </thead>
         <tbody>
-            @if ($peminjaman->isEmpty())
+            @if ($pengembalian->isEmpty())
                 <tr>
                     <td colspan="9" class="px-6 py-3 text-center text-gray-500 border">
                         Tidak ada data peminjaman
                     </td>
                 </tr>
             @else
-                @foreach ($peminjaman as $data)
+                @foreach ($pengembalian as $data)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        
+
                         <td scope="col" class="px-6 py-3">
                             {{ $data->user->nama }}
                         </td>
@@ -70,7 +70,7 @@
                     </tr>
 
                     @include('partials.modals.detail.modal-informasi-pengembalian', [
-                        'peminjaman' => $peminjaman,
+                        'pengembalian' => $pengembalian,
                     ])
 
                 @endforeach
